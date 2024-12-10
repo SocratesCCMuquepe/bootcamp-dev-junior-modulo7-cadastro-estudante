@@ -14,7 +14,7 @@ loadProducts()
 
 
 function loadCategories() {
-    var url = `http://localhost:8080/categories`;
+    var url = `http://localhost:8080/courses`;
     var method = 'GET';
 
 
@@ -24,26 +24,26 @@ function loadCategories() {
         async: false,
         success: (response) => {
 
-            categories = response;
-            for(var cat of categories ){
-                document.getElementById("selectCategory").innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+            courses = response;
+            for(var course of courses ){
+                document.getElementById("selectCurso").innerHTML += `<option value="${course.id}">${course.name}</option>`;
             }
 
         }
     })
 }
 
-function loadProducts() {
+function loadStudents() {
 
 
-    var url = `http://localhost:8080/products`;
+    var url = `http://localhost:8080/students`;
     var method = 'GET';
 
 
     $.getJSON(url, method, (response) => {
 
-        for (let prod of response) {
-            addNewRow(prod);
+        for (let student of response) {
+            addNewRow(student);
         }
 
     }).fail(() => {
@@ -56,45 +56,43 @@ function loadProducts() {
 //Salvar produtos
 function save() {
 
-    var productNew = {
-        id: products.length + 1,
+    var studentNew = {
         name: document.getElementById("inputName").value,
-        description: document.getElementById("inputDescription").value,
-        price: convertToNumber(document.getElementById("inputPrice").value),
-        category: document.getElementById("selectCategory").value,
-        promotion: document.getElementById("checkboxPromotion").checked,
-        new: document.getElementById("checkboxNew").checked
+        email: document.getElementById("inputEmail").value,
+        telefone: convertToNumber(document.getElementById("inputTelefone").value),
+        idCurso: document.getElementById("selectCurso").value,
+        turno: document.getElementById("checkboxTurno").checked
     };
 
-    console.log(productNew);
+    console.log(studentNew);
 
-    addNewRow(productNew);
-    products.push(productNew);
+    addNewRow(studentNew);
+    products.push(studentNew);
 
-    document.getElementById("formProduct").reset();
+    document.getElementById("formStudent").reset();
 
 }
 
 //Add new Row
-function addNewRow(prod) {
-    var table = document.getElementById("productsTable");
+function addNewRow(student) {
+    var table = document.getElementById("studentsTable");
     var newRow = table.insertRow()
 
-    // Insert id product
-    var idNode = document.createTextNode(prod.id);
+    // Insert id student
+    var idNode = document.createTextNode(student.id);
     newRow.insertCell().appendChild(idNode);
 
-    // Insert product name
-    var nameNode = document.createTextNode(prod.name);
+    // Insert student name
+    var nameNode = document.createTextNode(student.name);
     newRow.insertCell().appendChild(nameNode);
 
-    // Insert product description
-    var descriptionNode = document.createTextNode(prod.description);
+    // Insert student description
+    var descriptionNode = document.createTextNode(student.description);
     var cell = newRow.insertCell();
     cell.className = "d-none d-md-table-cell";
     cell.appendChild(descriptionNode);
 
-    // Insert product price
+    // Insert 
     var formatter = new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
@@ -103,7 +101,7 @@ function addNewRow(prod) {
     var priceNode = document.createTextNode(formatter.format(prod.price));
     newRow.insertCell().appendChild(priceNode);
 
-    // Insert product category
+    // Insert 
     var categoryNode = document.createTextNode(categories[prod.idCategory - 1].name);
     newRow.insertCell().appendChild(categoryNode);
 
