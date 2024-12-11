@@ -4,14 +4,15 @@ function convertToNumber(priceFormat) {
     return priceFormat.replace(/\./g, '').replace(',', '.');
 }
 
-var products = [];
+var students = [];
 
-var categories = [];
+var courses = [];
+
+var periods = ["Manhã", "Tarde", "Noite"];
 
 //Onload
 loadCourses()
 loadStudents()
-
 
 function loadCourses() {
     var url = `http://localhost:8080/courses`;
@@ -23,22 +24,18 @@ function loadCourses() {
         type: method,
         async: false,
         success: (response) => {
-
             courses = response;
             for (var course of courses) {
                 document.getElementById("selectCourse").innerHTML += `<option value="${course.id}">${course.name}</option>`;
             }
-
         }
     })
 }
 
 function loadStudents() {
 
-
     var url = `http://localhost:8080/students`;
     var method = 'GET';
-
 
     $.getJSON(url, method, (response) => {
 
@@ -49,8 +46,6 @@ function loadStudents() {
     }).fail(() => {
 
     });
-
-
 }
 
 //Salvar produtos
@@ -61,20 +56,29 @@ function save() {
         email: document.getElementById("inputEmail").value,
         phone: convertToNumber(document.getElementById("inputPhone").value),
         idCourse: document.getElementById("selectCourse").value,
-        period: document.getElementById("checkboxPeriod").checked
+        period: document.querySelector('input[name="checkboxPeriod"]:checked').value
     };
 
-    console.log(studentNew);
+    var url = `http://localhost:8080/student`;
+    var method = 'POST';
 
-    addNewRow(studentNew);
-    products.push(studentNew);
-
-    document.getElementById("formStudent").reset();
-
+    $.ajax({
+        url: url,
+        type: method,
+        contentType: "application/json",
+        data: JSON.stringify(studentNew),
+        async: false,
+        success: (student) => {
+            addNewRow(student);
+            students.push(student);
+            document.getElementById("formStudent").reset();
+        }
+    })
 }
 
 //Add new Row
 function addNewRow(student) {
+
     var table = document.getElementById("studentsTable");
     var newRow = table.insertRow()
 
@@ -86,37 +90,20 @@ function addNewRow(student) {
     var nameNode = document.createTextNode(student.name);
     newRow.insertCell().appendChild(nameNode);
 
-    // Insert student description
+    // Insert student email
     var descriptionNode = document.createTextNode(student.email);
     var cell = newRow.insertCell();
     cell.className = "d-none d-md-table-cell";
     cell.appendChild(descriptionNode);
 
-    // Insert 
-    var formatter = new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-    })
-
     var phoneNode = document.createTextNode(student.phone);
     newRow.insertCell().appendChild(phoneNode);
 
-    // Insert 
+    // Insert student course
     var idCourseNode = document.createTextNode(courses[student.idCourse - 1].name);
     newRow.insertCell().appendChild(idCourseNode);
-    
-    var periodNode = document.createTextNode(student.period)
 
-    switch (periodNode) {
-        case "1": periodNode = "Manhã"; break;
-        case "2": periodNode = "Tarde"; break;
-        case "3": periodNode = "Noite"; break;
-    }
-    console.log(periodNode);
-    var periodNode = document.createTextNode(student.period);
-    console.log(periodNode);
+    // Insert student period
+    var periodNode = document.createTextNode(periods[student.period - 1]);
     newRow.insertCell().appendChild(periodNode);
-
-   // cell.innerHTML = options;
-
 }
