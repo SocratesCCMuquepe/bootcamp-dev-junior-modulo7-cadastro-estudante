@@ -1,4 +1,4 @@
-$('#inputPrice').mask('000.000.000.000.000,00', { reverse: true });
+$('#inputPhone').mask('000-000-000', { reverse: true });
 
 function convertToNumber(priceFormat) {
     return priceFormat.replace(/\./g, '').replace(',', '.');
@@ -9,11 +9,11 @@ var products = [];
 var categories = [];
 
 //Onload
-loadCategories()
-loadProducts()
+loadCourses()
+loadStudents()
 
 
-function loadCategories() {
+function loadCourses() {
     var url = `http://localhost:8080/courses`;
     var method = 'GET';
 
@@ -25,8 +25,8 @@ function loadCategories() {
         success: (response) => {
 
             courses = response;
-            for(var course of courses ){
-                document.getElementById("selectCurso").innerHTML += `<option value="${course.id}">${course.name}</option>`;
+            for (var course of courses) {
+                document.getElementById("selectCourse").innerHTML += `<option value="${course.id}">${course.name}</option>`;
             }
 
         }
@@ -59,9 +59,9 @@ function save() {
     var studentNew = {
         name: document.getElementById("inputName").value,
         email: document.getElementById("inputEmail").value,
-        telefone: convertToNumber(document.getElementById("inputTelefone").value),
-        idCurso: document.getElementById("selectCurso").value,
-        turno: document.getElementById("checkboxTurno").checked
+        phone: convertToNumber(document.getElementById("inputPhone").value),
+        idCourse: document.getElementById("selectCourse").value,
+        period: document.getElementById("checkboxPeriod").checked
     };
 
     console.log(studentNew);
@@ -87,7 +87,7 @@ function addNewRow(student) {
     newRow.insertCell().appendChild(nameNode);
 
     // Insert student description
-    var descriptionNode = document.createTextNode(student.description);
+    var descriptionNode = document.createTextNode(student.email);
     var cell = newRow.insertCell();
     cell.className = "d-none d-md-table-cell";
     cell.appendChild(descriptionNode);
@@ -98,27 +98,25 @@ function addNewRow(student) {
         currency: "BRL"
     })
 
-    var priceNode = document.createTextNode(formatter.format(prod.price));
-    newRow.insertCell().appendChild(priceNode);
+    var phoneNode = document.createTextNode(student.phone);
+    newRow.insertCell().appendChild(phoneNode);
 
     // Insert 
-    var categoryNode = document.createTextNode(categories[prod.idCategory - 1].name);
-    newRow.insertCell().appendChild(categoryNode);
+    var idCourseNode = document.createTextNode(courses[student.idCourse - 1].name);
+    newRow.insertCell().appendChild(idCourseNode);
+    
+    var periodNode = document.createTextNode(student.period)
 
-    //Insert product options
-    var options = '';
-
-    if (prod.promotion) {
-        options = '<span class="badge bg-success me-1">P</span>';
+    switch (periodNode) {
+        case "1": periodNode = "Manhã"; break;
+        case "2": periodNode = "Tarde"; break;
+        case "3": periodNode = "Noite"; break;
     }
-    if (prod.newProduct) {
-        options += '<span class="badge bg-primary">L</span>';
+    console.log(periodNode);
+    var periodNode = document.createTextNode(student.period);
+    console.log(periodNode);
+    newRow.insertCell().appendChild(periodNode);
 
-    }
+   // cell.innerHTML = options;
 
-    cell = newRow.insertCell()
-    cell.className = "d-none d-md-table-cell";
-    cell.innerHTML = options;
-
-    // newRow.insertCell().innerHTML = options;
 }
