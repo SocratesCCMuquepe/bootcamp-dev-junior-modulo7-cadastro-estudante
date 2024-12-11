@@ -1,4 +1,4 @@
-$('#inputPhone').mask('000-000-000', { reverse: true });
+$('#inputPhone').mask('(00) 0000-0000', { reverse: false });
 
 function convertToNumber(priceFormat) {
     return priceFormat.replace(/\./g, '').replace(',', '.');

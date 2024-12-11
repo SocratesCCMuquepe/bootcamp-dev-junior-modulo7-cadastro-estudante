@@ -16,10 +16,11 @@ import ao.osti.student_backend.models.Course;
 @RestController
 @CrossOrigin
 public class CourseController {
+
+    // Iniciando a lista com 3 cursos conforme o exercicio
     private List<Course> courses = Arrays.asList(new Course(1, "Java"),
-            new Course(2, "C++"),
             new Course(3, "Phyton"),
-            new Course(4, "Outras"));
+            new Course(4, "Angular"));
 
     @GetMapping("courses/{id}")
     public ResponseEntity<Course> getCourse(@PathVariable int id) {

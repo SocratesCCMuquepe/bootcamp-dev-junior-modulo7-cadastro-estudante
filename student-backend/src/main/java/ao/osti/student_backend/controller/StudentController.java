@@ -23,6 +23,13 @@ public class StudentController {
 
     private List<Student> students = new ArrayList<>();
 
+    public StudentController() {
+        // Dados de 3 estudantes conforme o exercicio
+        students.add(new Student(1, "João Primeiro", "joao.primeiro@gmail.com", "(92) 9260-1177", 2, 2));
+        students.add(new Student(2, "Antonio Segundo", "antonio.segundo@gmail.com", "(94) 7740-8310", 1, 1));
+        students.add(new Student(3, "Paulo Terceiro", "paulo.terceiro@gmail.com", "(92) 1457-9812", 3, 3));
+    }
+
     @PostMapping("student")
     public ResponseEntity<Student> save(@RequestBody Student student) {
 
